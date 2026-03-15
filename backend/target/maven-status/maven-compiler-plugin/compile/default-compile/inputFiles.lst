@@ -1,3 +1,4 @@
+c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\application\usecase\AddTicketNoteService.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\application\usecase\AssignTicketTechnicianService.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\application\usecase\CreateCatalogoIncidenteService.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\application\usecase\CreateTicketService.java
@@ -29,6 +30,8 @@ c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\inciden
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\model\TicketStatus.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\model\Usuario.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\model\UsuarioRol.java
+c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\in\AddTicketNoteCommand.java
+c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\in\AddTicketNoteUseCase.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\in\AssignTicketTechnicianCommand.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\in\AssignTicketTechnicianUseCase.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\in\CreateCatalogoIncidenteCommand.java
@@ -58,6 +61,7 @@ c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\inciden
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\IncidentesApplication.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\AuthController.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\CatalogoIncidenteController.java
+c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\dto\AddTicketNoteRequest.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\dto\ApiErrorResponse.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\dto\AssignTicketTechnicianRequest.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\dto\CatalogoIncidenteResponse.java

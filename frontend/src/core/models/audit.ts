@@ -1,7 +1,7 @@
 import type { UserRole } from './auth';
 
 export type TicketAuditAction =
-  | 'CREADO'
+  | 'TICKET_CREADO'
   | 'ESTADO_ACTUALIZADO'
   | 'ASIGNACION_ACTUALIZADA'
   | 'COMENTARIO';

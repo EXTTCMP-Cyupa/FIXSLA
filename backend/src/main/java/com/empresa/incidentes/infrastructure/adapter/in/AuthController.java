@@ -1,5 +1,7 @@
 package com.empresa.incidentes.infrastructure.adapter.in;
 
+import com.empresa.incidentes.domain.model.Usuario;
+import com.empresa.incidentes.domain.port.out.UsuarioRepositoryPort;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.LoginRequest;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.LoginResponse;
 import com.empresa.incidentes.infrastructure.security.JwtProperties;
@@ -19,39 +21,43 @@ public class AuthController {
 
     private final JwtService jwtService;
     private final JwtProperties jwtProperties;
+    private final UsuarioRepositoryPort usuarioRepositoryPort;
 
-    public AuthController(JwtService jwtService, JwtProperties jwtProperties) {
+    public AuthController(
+            JwtService jwtService,
+            JwtProperties jwtProperties,
+            UsuarioRepositoryPort usuarioRepositoryPort
+    ) {
         this.jwtService = jwtService;
         this.jwtProperties = jwtProperties;
+        this.usuarioRepositoryPort = usuarioRepositoryPort;
     }
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public Mono<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        return Mono.fromSupplier(() -> {
-            String role = normalizeRole(request.role());
-            String token = jwtService.generateToken(request.username(), role);
-            return new LoginResponse(
-                    token,
-                    "Bearer",
-                    jwtProperties.expirationHours() * 3600,
-                    request.username(),
-                    role
-            );
-        });
+        String username = normalizeUsername(request.username());
+        return usuarioRepositoryPort.findByUsername(username)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("Usuario no registrado")))
+                .map(this::buildLoginResponse);
     }
 
-    private String normalizeRole(String rawRole) {
-        if (rawRole == null || rawRole.isBlank()) {
-            return "COLABORADOR";
-        }
+    private LoginResponse buildLoginResponse(Usuario usuario) {
+        String role = usuario.rol().name();
+        String token = jwtService.generateToken(usuario.username(), role);
+        return new LoginResponse(
+                token,
+                "Bearer",
+                jwtProperties.expirationHours() * 3600,
+                usuario.username(),
+                role
+        );
+    }
 
-        String role = rawRole.trim().toUpperCase();
-        return switch (role) {
-            case "USER", "COLABORADOR" -> "COLABORADOR";
-            case "TECH", "TECNICO" -> "TECNICO";
-            case "ADMIN", "ADMINISTRADOR" -> "ADMIN";
-            default -> "COLABORADOR";
-        };
+    private String normalizeUsername(String username) {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("El username es obligatorio");
+        }
+        return username.trim().toLowerCase();
     }
 }

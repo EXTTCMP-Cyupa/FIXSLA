@@ -3,7 +3,10 @@ package com.empresa.incidentes.infrastructure.adapter.in;
 import com.empresa.incidentes.domain.model.TicketPriority;
 import com.empresa.incidentes.domain.model.Ticket;
 import com.empresa.incidentes.domain.model.UsuarioRol;
+import com.empresa.incidentes.domain.model.Usuario;
 import com.empresa.incidentes.domain.model.TicketStatus;
+import com.empresa.incidentes.domain.port.in.AddTicketNoteCommand;
+import com.empresa.incidentes.domain.port.in.AddTicketNoteUseCase;
 import com.empresa.incidentes.domain.port.in.AssignTicketTechnicianCommand;
 import com.empresa.incidentes.domain.port.in.AssignTicketTechnicianUseCase;
 import com.empresa.incidentes.domain.port.in.CreateTicketCommand;
@@ -13,6 +16,8 @@ import com.empresa.incidentes.domain.port.in.ListTicketAuditUseCase;
 import com.empresa.incidentes.domain.port.in.ListTicketsQuery;
 import com.empresa.incidentes.domain.port.in.ListTicketsUseCase;
 import com.empresa.incidentes.domain.port.in.UpdateTicketStatusUseCase;
+import com.empresa.incidentes.domain.port.out.UsuarioRepositoryPort;
+import com.empresa.incidentes.infrastructure.adapter.in.dto.AddTicketNoteRequest;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.AssignTicketTechnicianRequest;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.TicketAuditResponse;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.CreateTicketRequest;
@@ -48,7 +53,9 @@ public class TicketController {
     private final ListTicketsUseCase listTicketsUseCase;
     private final UpdateTicketStatusUseCase updateTicketStatusUseCase;
     private final AssignTicketTechnicianUseCase assignTicketTechnicianUseCase;
+    private final AddTicketNoteUseCase addTicketNoteUseCase;
     private final ListTicketAuditUseCase listTicketAuditUseCase;
+    private final UsuarioRepositoryPort usuarioRepositoryPort;
     private final TicketApiMapper mapper;
     private final TicketAuditApiMapper auditMapper;
 
@@ -58,7 +65,9 @@ public class TicketController {
             ListTicketsUseCase listTicketsUseCase,
             UpdateTicketStatusUseCase updateTicketStatusUseCase,
             AssignTicketTechnicianUseCase assignTicketTechnicianUseCase,
+            AddTicketNoteUseCase addTicketNoteUseCase,
             ListTicketAuditUseCase listTicketAuditUseCase,
+                UsuarioRepositoryPort usuarioRepositoryPort,
             TicketApiMapper mapper,
             TicketAuditApiMapper auditMapper
     ) {
@@ -67,7 +76,9 @@ public class TicketController {
         this.listTicketsUseCase = listTicketsUseCase;
         this.updateTicketStatusUseCase = updateTicketStatusUseCase;
         this.assignTicketTechnicianUseCase = assignTicketTechnicianUseCase;
+        this.addTicketNoteUseCase = addTicketNoteUseCase;
         this.listTicketAuditUseCase = listTicketAuditUseCase;
+        this.usuarioRepositoryPort = usuarioRepositoryPort;
         this.mapper = mapper;
         this.auditMapper = auditMapper;
     }
@@ -141,6 +152,23 @@ public class TicketController {
             .map(mapper::toResponse);
         }
 
+        @PostMapping("/{ticketId}/notas")
+        public Mono<TicketAuditResponse> addWorkNote(
+            @PathVariable UUID ticketId,
+            @Valid @RequestBody AddTicketNoteRequest request,
+            Authentication authentication
+        ) {
+        return getTicketByIdUseCase.handle(ticketId)
+            .flatMap(ticket -> validateWorkNoteAccess(ticket, authentication))
+            .flatMap(ticket -> addTicketNoteUseCase.handle(new AddTicketNoteCommand(
+                ticketId,
+                request.nota(),
+                authentication.getName(),
+                actorRol(authentication).name()
+            )))
+            .map(auditMapper::toResponse);
+        }
+
         @GetMapping("/{ticketId}/auditoria")
         public Flux<TicketAuditResponse> listAudit(@PathVariable UUID ticketId, Authentication authentication) {
         return getTicketByIdUseCase.handle(ticketId)
@@ -165,8 +193,44 @@ public class TicketController {
                 .anyMatch(authority -> "ROLE_COLABORADOR".equals(authority.getAuthority()));
     }
 
+    private Mono<Ticket> validateWorkNoteAccess(Ticket ticket, Authentication authentication) {
+        UsuarioRol role = actorRol(authentication);
+
+        // ADMIN puede agregar notas en cualquier ticket
+        if (role == UsuarioRol.ADMIN) {
+            return Mono.just(ticket);
+        }
+
+        // COLABORADOR: solicitanteId se almacena como nameUUID desde userId(authentication), usar misma fuente
+        if (role == UsuarioRol.COLABORADOR) {
+            if (userId(authentication).equals(ticket.getSolicitanteId())) {
+                return Mono.just(ticket);
+            }
+            return Mono.error(new AccessDeniedException("No tienes permisos para agregar notas en este ticket"));
+        }
+
+        // TECNICO: tecnicoAsignadoId es el id real de BD (viene del request de asignación)
+        return currentUser(authentication)
+            .flatMap(user -> {
+                if (user.id().equals(ticket.getTecnicoAsignadoId())) {
+                    return Mono.just(ticket);
+                }
+                return Mono.error(new AccessDeniedException("No tienes permisos para agregar notas en este ticket"));
+            });
+    }
+
+    private Mono<Usuario> currentUser(Authentication authentication) {
+        String username = normalizeUsername(authentication);
+        return usuarioRepositoryPort.findByUsername(username)
+            .switchIfEmpty(Mono.error(new AccessDeniedException("Usuario autenticado no encontrado")));
+    }
+
     private UUID userId(Authentication authentication) {
-        return UUID.nameUUIDFromBytes(authentication.getName().toLowerCase().getBytes(StandardCharsets.UTF_8));
+        return UUID.nameUUIDFromBytes(normalizeUsername(authentication).getBytes(StandardCharsets.UTF_8));
+    }
+
+    private String normalizeUsername(Authentication authentication) {
+        return authentication.getName().trim().toLowerCase();
     }
 
     private UsuarioRol actorRol(Authentication authentication) {

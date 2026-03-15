@@ -29,6 +29,10 @@ export const ticketService = {
     const { data } = await apiClient.get<TicketAudit[]>(`/tickets/${ticketId}/auditoria`);
     return data;
   },
+  async addWorkNote(ticketId: string, nota: string): Promise<TicketAudit> {
+    const { data } = await apiClient.post<TicketAudit>(`/tickets/${ticketId}/notas`, { nota });
+    return data;
+  },
   async listCatalogos(): Promise<CatalogoIncidente[]> {
     const { data } = await apiClient.get<CatalogoIncidente[]>('/catalogos', { params: { soloActivos: true } });
     return data;

@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { authService } from './authService';
 import { Button } from '../../shared/Button';
 import { useTheme } from '../../core/hooks/useTheme';
@@ -12,7 +13,7 @@ interface LoginViewProps {
 export function LoginView({ onAuthenticated }: LoginViewProps) {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-  const [form, setForm] = useState({ username: 'colaborador@empresa.com', password: '123456', role: 'COLABORADOR' });
+  const [form, setForm] = useState({ username: 'colaborador.rrhh', password: '123456', role: 'COLABORADOR' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,8 +25,11 @@ export function LoginView({ onAuthenticated }: LoginViewProps) {
       const session = await authService.login(form);
       onAuthenticated(session.accessToken);
       navigate('/tickets');
-    } catch {
-      setError('No fue posible iniciar sesión.');
+    } catch (error) {
+      const message = axios.isAxiosError(error)
+        ? ((error.response?.data as { message?: string } | undefined)?.message ?? 'No fue posible iniciar sesión.')
+        : 'No fue posible iniciar sesión.';
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -55,7 +59,7 @@ export function LoginView({ onAuthenticated }: LoginViewProps) {
         <form className="stack" onSubmit={handleSubmit}>
           <div className="page-title">
             <h2 className="text-slate-900 dark:text-slate-50">Acceso seguro</h2>
-            <p className="text-slate-600 dark:text-slate-400">Usa un usuario técnico o colaborador para operar el portal.</p>
+            <p className="text-slate-600 dark:text-slate-400">Usa un usuario existente: colaborador.rrhh, tecnico.hw, tecnico.sw o admin.</p>
           </div>
           <label className="field text-slate-900 dark:text-slate-50">
             Usuario

@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .hasAnyRole("COLABORADOR", "TECNICO", "ADMIN")
                         .pathMatchers(HttpMethod.PATCH, "/api/v1/tickets/*/status").hasAnyRole("TECNICO", "ADMIN")
                         .pathMatchers(HttpMethod.PATCH, "/api/v1/tickets/*/assignee").hasAnyRole("TECNICO", "ADMIN")
+                        .pathMatchers(HttpMethod.POST, "/api/v1/tickets/*/notas").hasAnyRole("COLABORADOR", "TECNICO")
                         .pathMatchers(HttpMethod.POST, "/api/v1/tickets").hasAnyRole("COLABORADOR", "TECNICO", "ADMIN")
                         .pathMatchers(HttpMethod.GET, "/api/v1/tickets", "/api/v1/tickets/**")
                         .hasAnyRole("COLABORADOR", "TECNICO", "ADMIN")

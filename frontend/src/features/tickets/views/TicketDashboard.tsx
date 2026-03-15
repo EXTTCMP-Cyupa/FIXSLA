@@ -30,6 +30,9 @@ export function TicketDashboard({ onLogout }: TicketDashboardProps) {
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [audits, setAudits] = useState<TicketAudit[]>([]);
   const [auditLoading, setAuditLoading] = useState(false);
+  const [noteText, setNoteText] = useState('');
+  const [noteLoading, setNoteLoading] = useState(false);
+  const [noteError, setNoteError] = useState<string | null>(null);
   const [technicians, setTechnicians] = useState<User[]>([]);
   const [catalogAreaById, setCatalogAreaById] = useState<Record<string, string>>({});
   const [selectedAssignees, setSelectedAssignees] = useState<Record<string, string>>({});
@@ -66,6 +69,8 @@ export function TicketDashboard({ onLogout }: TicketDashboardProps) {
   useEffect(() => {
     if (!selectedTicket) {
       setAudits([]);
+      setNoteText('');
+      setNoteError(null);
       return;
     }
 
@@ -75,6 +80,27 @@ export function TicketDashboard({ onLogout }: TicketDashboardProps) {
       .catch(() => setAudits([]))
       .finally(() => setAuditLoading(false));
   }, [selectedTicket]);
+
+  const canWriteWorkNote = session?.role === 'TECNICO' || session?.role === 'COLABORADOR';
+
+  const handleAddWorkNote = async () => {
+    if (!selectedTicket || !noteText.trim()) {
+      return;
+    }
+
+    try {
+      setNoteLoading(true);
+      setNoteError(null);
+      await ticketService.addWorkNote(selectedTicket.id, noteText.trim());
+      const refreshed = await ticketService.listAudit(selectedTicket.id);
+      setAudits(refreshed);
+      setNoteText('');
+    } catch {
+      setNoteError('No fue posible agregar la nota. Verifica permisos o el contenido.');
+    } finally {
+      setNoteLoading(false);
+    }
+  };
 
   const handleTransition = async (ticket: Ticket, nextStatus: Ticket['estado']) => {
     const updated = await updateState(ticket, nextStatus);
@@ -180,6 +206,31 @@ export function TicketDashboard({ onLogout }: TicketDashboardProps) {
             <h4 className="text-[18px] font-semibold text-slate-900 dark:text-slate-50">{selectedTicket.titulo}</h4>
             <p className="text-[14px] text-slate-600 dark:text-slate-400">{selectedTicket.descripcion}</p>
             <div className="text-[12px] text-slate-600 dark:text-slate-400">Resolución límite: {new Date(selectedTicket.resolucionLimite).toLocaleString()}</div>
+
+            {canWriteWorkNote ? (
+              <div className="rounded-lg border border-slate-200 p-3 dark:border-slate-700">
+                <h5 className="mb-2 text-[14px] font-semibold text-slate-900 dark:text-slate-100">Agregar Nota de Trabajo</h5>
+                <textarea
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-[13px] text-slate-800 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+                  placeholder="Describe el avance, diagnóstico o acuerdo con el solicitante..."
+                  value={noteText}
+                  onChange={(event) => setNoteText(event.target.value)}
+                  rows={3}
+                />
+                {noteError ? <div className="mt-2 text-[12px] text-red-600 dark:text-red-300">{noteError}</div> : null}
+                <div className="mt-2 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => void handleAddWorkNote()}
+                    disabled={noteLoading || !noteText.trim()}
+                    className="rounded-lg border border-blue-500 bg-blue-600 px-3 py-2 text-[12px] font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 dark:border-blue-400 dark:bg-blue-500 dark:hover:bg-blue-400"
+                  >
+                    {noteLoading ? 'Guardando...' : 'Agregar Nota'}
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
             <div className="rounded-lg border border-slate-200 p-3 dark:border-slate-700">
               <h5 className="mb-2 text-[14px] font-semibold text-slate-900 dark:text-slate-100">Auditoría</h5>
               {auditLoading ? (
