@@ -3,7 +3,9 @@ import { authService } from '../../auth/authService';
 import { DashboardLayout } from '../../../shared/components/DashboardLayout';
 import { useTheme } from '../../../core/hooks/useTheme';
 import { userService } from '../services/userService';
+import { ticketService } from '../../tickets/services/ticketService';
 import type { CreateUserPayload, User } from '../../../core/models/user';
+import type { CatalogoIncidente } from '../../../core/models/catalogo';
 import { Button } from '../../../shared/Button';
 
 interface ConfiguracionViewProps {
@@ -15,6 +17,7 @@ const initialForm: CreateUserPayload = {
   nombre: '',
   rol: 'COLABORADOR',
   area: '',
+  catalogoIds: [],
 };
 
 export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
@@ -25,6 +28,8 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState<CreateUserPayload>(initialForm);
   const [saving, setSaving] = useState(false);
+  const [catalogos, setCatalogos] = useState<CatalogoIncidente[]>([]);
+  const [selectedCatalogIds, setSelectedCatalogIds] = useState<string[]>([]);
 
   const canManageUsers = session?.role === 'ADMIN';
 
@@ -43,6 +48,9 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
 
   useEffect(() => {
     void loadUsers();
+    void ticketService.listCatalogos()
+      .then((data) => setCatalogos(data))
+      .catch(() => setCatalogos([]));
   }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -55,9 +63,14 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
     try {
       setSaving(true);
       setError(null);
-      const created = await userService.create(form);
+      const payload: CreateUserPayload = {
+        ...form,
+        catalogoIds: form.rol === 'TECNICO' ? selectedCatalogIds : [],
+      };
+      const created = await userService.create(payload);
       setUsers((current) => [created, ...current]);
       setForm(initialForm);
+      setSelectedCatalogIds([]);
     } catch {
       setError('No fue posible registrar el usuario.');
     } finally {
@@ -92,7 +105,14 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
             </label>
             <label className="field text-[13px]">
               Rol
-              <select value={form.rol} onChange={(event) => setForm({ ...form, rol: event.target.value as CreateUserPayload['rol'] })}>
+              <select
+                value={form.rol}
+                onChange={(event) => {
+                  const newRol = event.target.value as CreateUserPayload['rol'];
+                  setForm({ ...form, rol: newRol, area: '', catalogoIds: [] });
+                  setSelectedCatalogIds([]);
+                }}
+              >
                 <option value="COLABORADOR">Colaborador</option>
                 <option value="TECNICO">Técnico</option>
                 <option value="ADMIN">Administrador</option>
@@ -100,8 +120,41 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
             </label>
             <label className="field text-[13px]">
               Área
-              <input value={form.area} onChange={(event) => setForm({ ...form, area: event.target.value })} />
+              <input
+                value={form.area}
+                placeholder="Ej: Soporte TI, Recursos Humanos…"
+                onChange={(event) => setForm({ ...form, area: event.target.value })}
+              />
             </label>
+            {form.rol === 'TECNICO' && (
+              <div className="space-y-1">
+                <span className="text-[13px] font-medium">Catálogos que puede atender</span>
+                {catalogos.length === 0 ? (
+                  <p className="text-[12px] text-slate-500">No hay catálogos creados aún.</p>
+                ) : (
+                  <div className="mt-1 space-y-1 rounded-lg border border-slate-200 p-2 dark:border-slate-600">
+                    {catalogos.map((cat) => (
+                      <label key={cat.id} className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-[13px] hover:bg-slate-50 dark:hover:bg-slate-700">
+                        <input
+                          type="checkbox"
+                          checked={selectedCatalogIds.includes(cat.id)}
+                          onChange={(event) => {
+                            setSelectedCatalogIds(event.target.checked
+                              ? [...selectedCatalogIds, cat.id]
+                              : selectedCatalogIds.filter((id) => id !== cat.id));
+                          }}
+                          className="h-4 w-4 rounded accent-blue-600"
+                        />
+                        {cat.nombre}
+                      </label>
+                    ))}
+                  </div>
+                )}
+                {selectedCatalogIds.length === 0 && (
+                  <p className="text-[11px] text-amber-600 dark:text-amber-400">Selecciona al menos un catálogo.</p>
+                )}
+              </div>
+            )}
 
             {error ? <div className="text-[13px] text-red-600 dark:text-red-300">{error}</div> : null}
             <Button label={saving ? 'Registrando...' : 'Registrar usuario'} type="submit" disabled={saving || !canManageUsers} />

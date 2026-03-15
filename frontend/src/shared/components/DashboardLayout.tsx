@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { LayoutDashboard, Ticket, BarChart3, Settings } from 'lucide-react';
+import { LayoutDashboard, Ticket, BarChart3, Settings, ClipboardList } from 'lucide-react';
 import type { UserRole } from '../../core/models/auth';
 import { ThemeToggle } from './ThemeToggle';
 import type { ThemeMode } from '../../core/hooks/useTheme';
@@ -17,12 +17,18 @@ interface DashboardLayoutProps extends PropsWithChildren {
   showNewTicketButton?: boolean;
 }
 
-const navItems = [
-  { label: 'Dashboard', icon: LayoutDashboard, to: '/tickets' },
-  { label: 'Tickets', icon: Ticket, to: '/tickets' },
-  { label: 'Reportes', icon: BarChart3, to: '/reportes' },
-  { label: 'Configuración', icon: Settings, to: '/configuracion' },
-];
+function buildNavItems(role?: UserRole) {
+  const items = [
+    { label: 'Dashboard', icon: LayoutDashboard, to: '/tickets' },
+    { label: 'Tickets', icon: Ticket, to: '/tickets' },
+  ];
+  if (role === 'TECNICO') {
+    items.push({ label: 'Mis Tickets', icon: ClipboardList, to: '/mis-tickets' });
+  }
+  items.push({ label: 'Reportes', icon: BarChart3, to: '/reportes' });
+  items.push({ label: 'Configuración', icon: Settings, to: '/configuracion' });
+  return items;
+}
 
 export function DashboardLayout({
   username,
@@ -35,6 +41,7 @@ export function DashboardLayout({
   showNewTicketButton = true,
   children,
 }: DashboardLayoutProps) {
+  const navItems = buildNavItems(role);
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] dark:bg-[#0F172A] dark:text-[#F1F5F9]">
       <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-6 p-4 lg:grid-cols-[260px_1fr] lg:p-6">

@@ -5,7 +5,7 @@ import type { CreateTicketPayload, Ticket, TicketStatus, UpdateTicketStatusPaylo
 import type { CreateCatalogoPayload } from '../../../core/models/catalogo';
 
 export const ticketService = {
-  async list(filters?: Partial<{ estado: TicketStatus }>): Promise<Ticket[]> {
+  async list(filters?: Partial<{ estado: TicketStatus; catalogoIncidenteId: string }>): Promise<Ticket[]> {
     const { data } = await apiClient.get<Ticket[]>('/tickets', { params: filters });
     return data;
   },

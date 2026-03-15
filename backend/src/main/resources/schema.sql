@@ -49,3 +49,11 @@ CREATE TABLE IF NOT EXISTS ticket_audit (
     fecha TIMESTAMP NOT NULL,
     CONSTRAINT fk_ticket_audit_ticket FOREIGN KEY (ticket_id) REFERENCES tickets(id)
 );
+
+    CREATE TABLE IF NOT EXISTS usuario_catalogo (
+        usuario_id UUID NOT NULL,
+        catalogo_id UUID NOT NULL,
+        PRIMARY KEY (usuario_id, catalogo_id),
+        CONSTRAINT fk_uc_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+        CONSTRAINT fk_uc_catalogo FOREIGN KEY (catalogo_id) REFERENCES catalogos_incidente(id)
+    );

@@ -1,3 +1,4 @@
+DELETE FROM usuario_catalogo;
 DELETE FROM ticket_audit;
 DELETE FROM tickets;
 DELETE FROM usuarios;
@@ -15,3 +16,8 @@ VALUES
 ('11111111-1111-1111-1111-111111111111', 'Hardware', 'Fallas de portátiles, impresoras y periféricos', 'ALTA', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('22222222-2222-2222-2222-222222222222', 'Accesos', 'Incidentes de usuarios, contraseñas y permisos', 'MEDIA', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('33333333-3333-3333-3333-333333333333', 'Software', 'Errores de aplicaciones corporativas', 'BAJA', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- Asignación de catálogos a técnicos
+INSERT INTO usuario_catalogo (usuario_id, catalogo_id) VALUES
+('960ee512-baed-be35-b1a6-60197298174e', '11111111-1111-1111-1111-111111111111'),
+('e744b704-6258-d333-9c51-998c61d6396d', '33333333-3333-3333-3333-333333333333');

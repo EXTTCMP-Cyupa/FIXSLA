@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { LoginView } from './features/auth/LoginView';
 import { TicketDashboard } from './features/tickets/views/TicketDashboard';
 import { CreateTicketPage } from './features/tickets/views/CreateTicketPage';
+import { MisTicketsView } from './features/tickets/views/MisTicketsView';
 import { authService } from './features/auth/authService';
 import { ReportesView } from './features/reports/views/ReportesView';
 import { ConfiguracionView } from './features/users/views/ConfiguracionView';
@@ -35,6 +36,10 @@ function App() {
           <Route
             path="/configuracion"
             element={isAuthenticated ? <ConfiguracionView onLogout={handleLogout} /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/mis-tickets"
+            element={isAuthenticated ? <MisTicketsView onLogout={handleLogout} /> : <Navigate to="/login" replace />}
           />
           <Route
             path="/tickets/new"

@@ -70,7 +70,9 @@ export function TicketTable({
                 (() => {
                   const ticketArea = catalogAreaById[ticket.catalogoIncidenteId];
                   const eligibleTechnicians = technicians.filter((tech) =>
-                    !ticketArea || tech.area.toLowerCase() === ticketArea.toLowerCase(),
+                    !ticket.catalogoIncidenteId
+                    || (tech.catalogoIds ?? []).includes(ticket.catalogoIncidenteId)
+                    || (!!ticketArea && tech.area.toLowerCase() === ticketArea.toLowerCase()),
                   );
                   const assignedTech = technicians.find((tech) => tech.id === ticket.tecnicoAsignadoId);
                   return (

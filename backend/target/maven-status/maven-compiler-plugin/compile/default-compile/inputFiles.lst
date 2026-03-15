@@ -57,6 +57,7 @@ c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\inciden
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\out\TicketAuditRepositoryPort.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\out\TicketCodeGeneratorPort.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\out\TicketRepositoryPort.java
+c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\out\UsuarioCatalogoRepositoryPort.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\out\UsuarioRepositoryPort.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\IncidentesApplication.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\AuthController.java
@@ -95,6 +96,7 @@ c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\inciden
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\out\SystemClockAdapter.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\out\TicketAuditRepositoryAdapter.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\out\TicketRepositoryAdapter.java
+c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\out\UsuarioCatalogoRepositoryAdapter.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\out\UsuarioRepositoryAdapter.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\config\CorsConfig.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\config\DatabaseConfig.java

@@ -6,6 +6,7 @@ export interface User {
   nombre: string;
   rol: UserRole;
   area: string;
+  catalogoIds: string[];
   activo: boolean;
   creadoEn: string;
   actualizadoEn: string;
@@ -16,4 +17,5 @@ export interface CreateUserPayload {
   nombre: string;
   rol: UserRole;
   area: string;
+  catalogoIds?: string[];
 }

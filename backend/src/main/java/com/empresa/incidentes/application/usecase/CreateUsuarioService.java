@@ -7,6 +7,7 @@ import com.empresa.incidentes.domain.port.out.ClockPort;
 import com.empresa.incidentes.domain.port.out.UsuarioRepositoryPort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import java.util.List;
 
 @Service
 public class CreateUsuarioService implements CreateUsuarioUseCase {
@@ -26,6 +27,7 @@ public class CreateUsuarioService implements CreateUsuarioUseCase {
                         command.nombre(),
                         command.rol(),
                         command.area(),
+                command.catalogoIds() != null ? command.catalogoIds() : List.of(),
                         clockPort.now()
                 ))
                 .flatMap(usuarioRepository::save);
