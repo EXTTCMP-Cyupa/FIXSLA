@@ -1,0 +1,5 @@
+spring:
+  r2dbc:
+    url: ${DB_R2DBC_URL:r2dbc:postgresql://localhost:5432/incidentesdb}
+    username: ${DB_USERNAME:incidentes}
+    password: ${DB_PASSWORD:incidentes123}

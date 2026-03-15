@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: ${APP_PROFILE:docker}
+  main:
+    web-application-type: reactive
+  application:
+    name: incidentes-backend
+
+security:
+  jwt:
+    secret: "change-this-secret-key-with-at-least-32-characters"
+    expiration-hours: 10
