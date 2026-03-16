@@ -18,13 +18,20 @@ interface DashboardLayoutProps extends PropsWithChildren {
 }
 
 function buildNavItems(role?: UserRole) {
+  if (role === 'TECNICO') {
+    return [
+      { label: 'Dashboard', icon: LayoutDashboard, to: '/dashboard-tecnico' },
+      { label: 'Mis Tickets', icon: ClipboardList, to: '/mis-tickets' },
+      { label: 'Tickets', icon: Ticket, to: '/tickets' },
+      { label: 'Reportes', icon: BarChart3, to: '/reportes' },
+      { label: 'Configuración', icon: Settings, to: '/configuracion' },
+    ];
+  }
+
   const items = [
     { label: 'Dashboard', icon: LayoutDashboard, to: '/tickets' },
     { label: 'Tickets', icon: Ticket, to: '/tickets' },
   ];
-  if (role === 'TECNICO') {
-    items.push({ label: 'Mis Tickets', icon: ClipboardList, to: '/mis-tickets' });
-  }
   items.push({ label: 'Reportes', icon: BarChart3, to: '/reportes' });
   items.push({ label: 'Configuración', icon: Settings, to: '/configuracion' });
   return items;

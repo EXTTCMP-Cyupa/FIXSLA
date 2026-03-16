@@ -24,7 +24,7 @@ export function LoginView({ onAuthenticated }: LoginViewProps) {
       setError(null);
       const session = await authService.login(form);
       onAuthenticated(session.accessToken);
-      navigate('/tickets');
+      navigate(session.role === 'TECNICO' ? '/dashboard-tecnico' : '/tickets');
     } catch (error) {
       const message = axios.isAxiosError(error)
         ? ((error.response?.data as { message?: string } | undefined)?.message ?? 'No fue posible iniciar sesión.')
