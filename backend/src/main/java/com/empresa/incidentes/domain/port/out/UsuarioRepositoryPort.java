@@ -9,6 +9,8 @@ public interface UsuarioRepositoryPort {
 
     Mono<Usuario> save(Usuario usuario);
 
+    Mono<Usuario> findById(java.util.UUID id);
+
     Flux<Usuario> findAll();
 
     Mono<Usuario> findByUsername(String username);

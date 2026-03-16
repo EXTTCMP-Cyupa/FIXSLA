@@ -40,6 +40,16 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
     }
 
     @Override
+    public Mono<Usuario> findById(java.util.UUID id) {
+        return repository.findById(id)
+                .flatMap(entity ->
+                    catalogoPort.findCatalogoIdsByUsuarioId(entity.getId())
+                        .collectList()
+                        .map(catalogoIds -> mapper.toDomain(entity, catalogoIds))
+                );
+    }
+
+    @Override
     public Flux<Usuario> findAll() {
         return repository.findAll()
                 .flatMap(entity ->

@@ -10,11 +10,13 @@ c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\inciden
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\application\usecase\ListTicketsService.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\application\usecase\ListUsuariosService.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\application\usecase\UpdateTicketStatusService.java
+c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\application\usecase\UpdateUsuarioService.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\exception\CatalogoIncidenteNotFoundException.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\exception\DomainException.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\exception\InactiveCatalogoIncidenteException.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\exception\InvalidTicketTransitionException.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\exception\TicketNotFoundException.java
+c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\exception\UsuarioNotFoundException.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\model\CanceladoTicketState.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\model\CatalogoIncidente.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\model\EnProcesoTicketState.java
@@ -51,6 +53,8 @@ c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\inciden
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\in\ListUsuariosUseCase.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\in\UpdateTicketStatusCommand.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\in\UpdateTicketStatusUseCase.java
+c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\in\UpdateUsuarioCommand.java
+c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\in\UpdateUsuarioUseCase.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\out\CatalogoIncidenteRepositoryPort.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\out\ClockPort.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\domain\port\out\SlaCalculatorPort.java
@@ -74,6 +78,7 @@ c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\inciden
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\dto\TicketAuditResponse.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\dto\TicketResponse.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\dto\UpdateTicketStatusRequest.java
+c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\dto\UpdateUsuarioRequest.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\dto\UsuarioResponse.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\GlobalExceptionHandler.java
 c:\Users\Admin\Documents\GitHub\FIXSLA\backend\src\main\java\com\empresa\incidentes\infrastructure\adapter\in\TicketController.java

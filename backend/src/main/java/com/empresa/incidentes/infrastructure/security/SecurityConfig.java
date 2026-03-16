@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
                         .pathMatchers(HttpMethod.GET, "/api/v1/usuarios").hasAnyRole("TECNICO", "ADMIN")
                         .pathMatchers(HttpMethod.POST, "/api/v1/usuarios").hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.PATCH, "/api/v1/usuarios/*").hasRole("ADMIN")
                         .pathMatchers(HttpMethod.POST, "/api/v1/catalogos").hasRole("ADMIN")
                         .pathMatchers(HttpMethod.GET, "/api/v1/catalogos", "/api/v1/catalogos/**")
                         .hasAnyRole("COLABORADOR", "TECNICO", "ADMIN")

@@ -3,7 +3,9 @@ package com.empresa.incidentes.infrastructure.mapper;
 import com.empresa.incidentes.domain.model.Usuario;
 import com.empresa.incidentes.domain.model.UsuarioRol;
 import com.empresa.incidentes.domain.port.in.CreateUsuarioCommand;
+import com.empresa.incidentes.domain.port.in.UpdateUsuarioCommand;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.CreateUsuarioRequest;
+import com.empresa.incidentes.infrastructure.adapter.in.dto.UpdateUsuarioRequest;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.UsuarioResponse;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-15T17:41:57-0500",
+    date = "2026-03-15T19:02:51-0500",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Oracle Corporation)"
 )
 @Component
@@ -44,6 +46,35 @@ public class UsuarioApiMapperImpl implements UsuarioApiMapper {
         CreateUsuarioCommand createUsuarioCommand = new CreateUsuarioCommand( username, nombre, rol, area, catalogoIds );
 
         return createUsuarioCommand;
+    }
+
+    @Override
+    public UpdateUsuarioCommand toUpdateCommand(UpdateUsuarioRequest request, UUID id) {
+        if ( request == null && id == null ) {
+            return null;
+        }
+
+        String nombre = null;
+        UsuarioRol rol = null;
+        String area = null;
+        Boolean activo = null;
+        List<UUID> catalogoIds = null;
+        if ( request != null ) {
+            nombre = request.nombre();
+            rol = request.rol();
+            area = request.area();
+            activo = request.activo();
+            List<UUID> list = request.catalogoIds();
+            if ( list != null ) {
+                catalogoIds = new ArrayList<UUID>( list );
+            }
+        }
+        UUID id1 = null;
+        id1 = id;
+
+        UpdateUsuarioCommand updateUsuarioCommand = new UpdateUsuarioCommand( id1, nombre, rol, area, activo, catalogoIds );
+
+        return updateUsuarioCommand;
     }
 
     @Override

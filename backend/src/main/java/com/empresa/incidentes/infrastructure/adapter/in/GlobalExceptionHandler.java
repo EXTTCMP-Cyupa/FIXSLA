@@ -3,6 +3,7 @@ package com.empresa.incidentes.infrastructure.adapter.in;
 import com.empresa.incidentes.domain.exception.CatalogoIncidenteNotFoundException;
 import com.empresa.incidentes.domain.exception.DomainException;
 import com.empresa.incidentes.domain.exception.TicketNotFoundException;
+import com.empresa.incidentes.domain.exception.UsuarioNotFoundException;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import java.time.Instant;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({TicketNotFoundException.class, CatalogoIncidenteNotFoundException.class})
+    @ExceptionHandler({TicketNotFoundException.class, CatalogoIncidenteNotFoundException.class, UsuarioNotFoundException.class})
     public Mono<ResponseEntity<ApiErrorResponse>> handleNotFound(RuntimeException exception, ServerWebExchange exchange) {
         return buildResponse(HttpStatus.NOT_FOUND, exception, exchange.getRequest().getPath().value());
     }

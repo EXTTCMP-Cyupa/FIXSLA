@@ -19,3 +19,11 @@ export interface CreateUserPayload {
   area: string;
   catalogoIds?: string[];
 }
+
+export interface UpdateUserPayload {
+  nombre: string;
+  rol: UserRole;
+  area: string;
+  activo: boolean;
+  catalogoIds?: string[];
+}

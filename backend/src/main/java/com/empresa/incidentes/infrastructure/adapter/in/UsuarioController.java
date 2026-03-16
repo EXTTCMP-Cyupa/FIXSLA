@@ -4,12 +4,16 @@ import com.empresa.incidentes.domain.model.UsuarioRol;
 import com.empresa.incidentes.domain.port.in.CreateUsuarioUseCase;
 import com.empresa.incidentes.domain.port.in.ListUsuariosQuery;
 import com.empresa.incidentes.domain.port.in.ListUsuariosUseCase;
+import com.empresa.incidentes.domain.port.in.UpdateUsuarioUseCase;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.CreateUsuarioRequest;
+import com.empresa.incidentes.infrastructure.adapter.in.dto.UpdateUsuarioRequest;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.UsuarioResponse;
 import com.empresa.incidentes.infrastructure.mapper.UsuarioApiMapper;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,15 +28,18 @@ import reactor.core.publisher.Mono;
 public class UsuarioController {
 
     private final CreateUsuarioUseCase createUsuarioUseCase;
+    private final UpdateUsuarioUseCase updateUsuarioUseCase;
     private final ListUsuariosUseCase listUsuariosUseCase;
     private final UsuarioApiMapper mapper;
 
     public UsuarioController(
             CreateUsuarioUseCase createUsuarioUseCase,
+            UpdateUsuarioUseCase updateUsuarioUseCase,
             ListUsuariosUseCase listUsuariosUseCase,
             UsuarioApiMapper mapper
     ) {
         this.createUsuarioUseCase = createUsuarioUseCase;
+        this.updateUsuarioUseCase = updateUsuarioUseCase;
         this.listUsuariosUseCase = listUsuariosUseCase;
         this.mapper = mapper;
     }
@@ -41,6 +48,14 @@ public class UsuarioController {
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<UsuarioResponse> create(@Valid @RequestBody CreateUsuarioRequest request) {
         return createUsuarioUseCase.handle(mapper.toCommand(request)).map(mapper::toResponse);
+    }
+
+    @PatchMapping("/{usuarioId}")
+    public Mono<UsuarioResponse> update(
+            @PathVariable java.util.UUID usuarioId,
+            @Valid @RequestBody UpdateUsuarioRequest request
+    ) {
+        return updateUsuarioUseCase.handle(mapper.toUpdateCommand(request, usuarioId)).map(mapper::toResponse);
     }
 
     @GetMapping

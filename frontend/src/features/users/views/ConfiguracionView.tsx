@@ -4,7 +4,7 @@ import { DashboardLayout } from '../../../shared/components/DashboardLayout';
 import { useTheme } from '../../../core/hooks/useTheme';
 import { userService } from '../services/userService';
 import { ticketService } from '../../tickets/services/ticketService';
-import type { CreateUserPayload, User } from '../../../core/models/user';
+import type { CreateUserPayload, UpdateUserPayload, User } from '../../../core/models/user';
 import type { CatalogoIncidente } from '../../../core/models/catalogo';
 import { Button } from '../../../shared/Button';
 
@@ -12,12 +12,17 @@ interface ConfiguracionViewProps {
   onLogout: () => void;
 }
 
-const initialForm: CreateUserPayload = {
+interface UserFormState extends CreateUserPayload {
+  activo: boolean;
+}
+
+const initialForm: UserFormState = {
   username: '',
   nombre: '',
   rol: 'COLABORADOR',
   area: '',
   catalogoIds: [],
+  activo: true,
 };
 
 export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
@@ -26,8 +31,9 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [form, setForm] = useState<CreateUserPayload>(initialForm);
+  const [form, setForm] = useState<UserFormState>(initialForm);
   const [saving, setSaving] = useState(false);
+  const [editingUserId, setEditingUserId] = useState<string | null>(null);
   const [catalogos, setCatalogos] = useState<CatalogoIncidente[]>([]);
   const [selectedCatalogIds, setSelectedCatalogIds] = useState<string[]>([]);
 
@@ -53,6 +59,25 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
       .catch(() => setCatalogos([]));
   }, []);
 
+  const startEditing = (user: User) => {
+    setEditingUserId(user.id);
+    setForm({
+      username: user.username,
+      nombre: user.nombre,
+      rol: user.rol,
+      area: user.area,
+      catalogoIds: user.catalogoIds,
+      activo: user.activo,
+    });
+    setSelectedCatalogIds(user.catalogoIds ?? []);
+  };
+
+  const resetForm = () => {
+    setEditingUserId(null);
+    setForm(initialForm);
+    setSelectedCatalogIds([]);
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!canManageUsers) {
@@ -63,16 +88,30 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
     try {
       setSaving(true);
       setError(null);
-      const payload: CreateUserPayload = {
-        ...form,
-        catalogoIds: form.rol === 'TECNICO' ? selectedCatalogIds : [],
-      };
-      const created = await userService.create(payload);
-      setUsers((current) => [created, ...current]);
-      setForm(initialForm);
-      setSelectedCatalogIds([]);
+      if (editingUserId) {
+        const payload: UpdateUserPayload = {
+          nombre: form.nombre,
+          rol: form.rol,
+          area: form.area,
+          activo: form.activo,
+          catalogoIds: form.rol === 'TECNICO' ? selectedCatalogIds : [],
+        };
+        const updated = await userService.update(editingUserId, payload);
+        setUsers((current) => current.map((u) => (u.id === updated.id ? updated : u)));
+      } else {
+        const payload: CreateUserPayload = {
+          username: form.username,
+          nombre: form.nombre,
+          rol: form.rol,
+          area: form.area,
+          catalogoIds: form.rol === 'TECNICO' ? selectedCatalogIds : [],
+        };
+        const created = await userService.create(payload);
+        setUsers((current) => [created, ...current]);
+      }
+      resetForm();
     } catch {
-      setError('No fue posible registrar el usuario.');
+      setError(editingUserId ? 'No fue posible actualizar el usuario.' : 'No fue posible registrar el usuario.');
     } finally {
       setSaving(false);
     }
@@ -91,13 +130,17 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
     >
       <section className="grid grid-cols-1 gap-4 xl:grid-cols-[380px_1fr]">
         <article className="rounded-xl border border-[#E2E8F0] bg-white p-4 shadow-md dark:border-slate-700 dark:bg-[#1E293B]">
-          <h3 className="text-[16px] font-semibold">Registrar Usuario</h3>
+          <h3 className="text-[16px] font-semibold">{editingUserId ? 'Editar Usuario' : 'Registrar Usuario'}</h3>
           <p className="text-[13px] text-slate-600 dark:text-slate-400">Disponible solo para administradores.</p>
 
           <form className="mt-3 space-y-3" onSubmit={handleSubmit}>
             <label className="field text-[13px]">
               Username
-              <input value={form.username} onChange={(event) => setForm({ ...form, username: event.target.value })} />
+              <input
+                value={form.username}
+                disabled={Boolean(editingUserId)}
+                onChange={(event) => setForm({ ...form, username: event.target.value })}
+              />
             </label>
             <label className="field text-[13px]">
               Nombre
@@ -109,7 +152,7 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
                 value={form.rol}
                 onChange={(event) => {
                   const newRol = event.target.value as CreateUserPayload['rol'];
-                  setForm({ ...form, rol: newRol, area: '', catalogoIds: [] });
+                  setForm({ ...form, rol: newRol, catalogoIds: [] });
                   setSelectedCatalogIds([]);
                 }}
               >
@@ -125,6 +168,16 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
                 placeholder="Ej: Soporte TI, Recursos Humanos…"
                 onChange={(event) => setForm({ ...form, area: event.target.value })}
               />
+            </label>
+            <label className="field text-[13px]">
+              Estado
+              <select
+                value={form.activo ? 'ACTIVO' : 'INACTIVO'}
+                onChange={(event) => setForm({ ...form, activo: event.target.value === 'ACTIVO' })}
+              >
+                <option value="ACTIVO">Activo</option>
+                <option value="INACTIVO">Inactivo</option>
+              </select>
             </label>
             {form.rol === 'TECNICO' && (
               <div className="space-y-1">
@@ -157,7 +210,22 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
             )}
 
             {error ? <div className="text-[13px] text-red-600 dark:text-red-300">{error}</div> : null}
-            <Button label={saving ? 'Registrando...' : 'Registrar usuario'} type="submit" disabled={saving || !canManageUsers} />
+            <div className="flex gap-2">
+              <Button
+                label={saving ? (editingUserId ? 'Guardando...' : 'Registrando...') : (editingUserId ? 'Guardar cambios' : 'Registrar usuario')}
+                type="submit"
+                disabled={saving || !canManageUsers}
+              />
+              {editingUserId && (
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="rounded-lg border border-slate-300 px-3 py-2 text-[12px] font-semibold text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800"
+                >
+                  Cancelar
+                </button>
+              )}
+            </div>
           </form>
         </article>
 
@@ -184,6 +252,7 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
                     <th className="px-2 py-2">Rol</th>
                     <th className="px-2 py-2">Área</th>
                     <th className="px-2 py-2">Estado</th>
+                    {canManageUsers ? <th className="px-2 py-2">Acciones</th> : null}
                   </tr>
                 </thead>
                 <tbody>
@@ -194,6 +263,17 @@ export function ConfiguracionView({ onLogout }: ConfiguracionViewProps) {
                       <td className="px-2 py-2">{user.rol}</td>
                       <td className="px-2 py-2">{user.area}</td>
                       <td className="px-2 py-2">{user.activo ? 'Activo' : 'Inactivo'}</td>
+                      {canManageUsers ? (
+                        <td className="px-2 py-2">
+                          <button
+                            type="button"
+                            onClick={() => startEditing(user)}
+                            className="rounded border border-blue-300 px-2 py-1 text-[12px] font-semibold text-blue-700 hover:bg-blue-50 dark:border-blue-500/40 dark:text-blue-300 dark:hover:bg-blue-500/10"
+                          >
+                            Editar
+                          </button>
+                        </td>
+                      ) : null}
                     </tr>
                   ))}
                 </tbody>
