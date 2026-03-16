@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { TicketAudit } from '../../../core/models/audit';
 import type { Ticket } from '../../../core/models/ticket';
 import type { User } from '../../../core/models/user';
 import { authService } from '../../auth/authService';
 import { Modal } from '../../../shared/Modal';
-import { CreateCatalogoForm } from '../components/CreateCatalogoForm';
 import { useTicketState } from '../hooks/useTicketState';
 import { useTickets } from '../hooks/useTickets';
 import { ticketService } from '../services/ticketService';
@@ -20,13 +20,14 @@ interface TicketDashboardProps {
 }
 
 export function TicketDashboard({ onLogout }: TicketDashboardProps) {
+  const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { tickets, loading, error, metrics, refresh, setTickets } = useTickets();
   const { updateState, updatingId } = useTicketState();
   const session = authService.getSession();
   const canTransition = session?.role === 'TECNICO' || session?.role === 'ADMIN';
   const canAssign = session?.role === 'TECNICO' || session?.role === 'ADMIN';
-  const canManageCatalogos = session?.role === 'ADMIN';
+  const useDetailPage = session?.role === 'TECNICO' || session?.role === 'ADMIN';
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [audits, setAudits] = useState<TicketAudit[]>([]);
   const [auditLoading, setAuditLoading] = useState(false);
@@ -37,8 +38,6 @@ export function TicketDashboard({ onLogout }: TicketDashboardProps) {
   const [catalogAreaById, setCatalogAreaById] = useState<Record<string, string>>({});
   const [selectedAssignees, setSelectedAssignees] = useState<Record<string, string>>({});
   const [assigningId, setAssigningId] = useState<string | null>(null);
-  const [catalogoLoading, setCatalogoLoading] = useState(false);
-  const [catalogoMessage, setCatalogoMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (selectedTicket) {
@@ -107,19 +106,6 @@ export function TicketDashboard({ onLogout }: TicketDashboardProps) {
     setTickets((current) => current.map((item) => (item.id === updated.id ? updated : item)));
   };
 
-  const handleCreateCatalogo = async (payload: { nombre: string; descripcion: string; prioridadPorDefecto: 'ALTA' | 'MEDIA' | 'BAJA' }) => {
-    try {
-      setCatalogoLoading(true);
-      setCatalogoMessage(null);
-      await ticketService.createCatalogo(payload);
-      setCatalogoMessage('Catálogo creado correctamente.');
-    } catch {
-      setCatalogoMessage('No fue posible crear el catálogo.');
-    } finally {
-      setCatalogoLoading(false);
-    }
-  };
-
   const handleAssigneeSelection = (ticketId: string, userId: string) => {
     setSelectedAssignees((current) => ({ ...current, [ticketId]: userId }));
   };
@@ -186,19 +172,18 @@ export function TicketDashboard({ onLogout }: TicketDashboardProps) {
           assigningId={assigningId}
           selectedAssignees={selectedAssignees}
           updatingId={updatingId}
-          onOpenDetails={setSelectedTicket}
+          onOpenDetails={(ticket) => {
+            if (useDetailPage) {
+              navigate(`/tickets/${ticket.id}`);
+              return;
+            }
+            setSelectedTicket(ticket);
+          }}
           onTransition={handleTransition}
           onAssigneeSelection={handleAssigneeSelection}
           onAssign={handleAssign}
         />
       </section>
-
-      {canManageCatalogos ? (
-        <section className="stack">
-          <CreateCatalogoForm loading={catalogoLoading} onSubmit={handleCreateCatalogo} />
-          {catalogoMessage ? <span className="text-[14px] text-slate-600 dark:text-slate-400">{catalogoMessage}</span> : null}
-        </section>
-      ) : null}
 
       <Modal isOpen={Boolean(selectedTicket)} title={selectedTicket?.codigo ?? 'Detalle'} onClose={() => setSelectedTicket(null)}>
         {selectedTicket ? (

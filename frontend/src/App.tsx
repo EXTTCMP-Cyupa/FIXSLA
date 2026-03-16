@@ -5,16 +5,24 @@ import { TicketDashboard } from './features/tickets/views/TicketDashboard';
 import { CreateTicketPage } from './features/tickets/views/CreateTicketPage';
 import { MisTicketsView } from './features/tickets/views/MisTicketsView';
 import { TecnicoDashboardView } from './features/tickets/views/TecnicoDashboardView';
+import { ColaboradorDashboardView } from './features/tickets/views/ColaboradorDashboardView';
+import { MisIncidentesView } from './features/tickets/views/MisIncidentesView';
+import { TicketDetailView } from './features/tickets/views/TicketDetailView';
 import { authService } from './features/auth/authService';
 import { ReportesView } from './features/reports/views/ReportesView';
 import { ConfiguracionView } from './features/users/views/ConfiguracionView';
+import { CatalogosAdminView } from './features/catalogos/views/CatalogosAdminView';
 
 function App() {
   const [token, setToken] = useState<string | null>(authService.getToken());
   const session = authService.getSession();
 
   const isAuthenticated = useMemo(() => Boolean(token), [token]);
-  const defaultAuthenticatedPath = session?.role === 'TECNICO' ? '/dashboard-tecnico' : '/tickets';
+  const defaultAuthenticatedPath = session?.role === 'TECNICO'
+    ? '/dashboard-tecnico'
+    : session?.role === 'COLABORADOR'
+      ? '/dashboard-colaborador'
+      : '/tickets';
   const handleLogout = () => {
     authService.clear();
     setToken(null);
@@ -33,12 +41,28 @@ function App() {
             element={isAuthenticated ? <TecnicoDashboardView onLogout={handleLogout} /> : <Navigate to="/login" replace />}
           />
           <Route
+            path="/dashboard-colaborador"
+            element={isAuthenticated ? <ColaboradorDashboardView onLogout={handleLogout} /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/mis-incidentes"
+            element={isAuthenticated ? <MisIncidentesView onLogout={handleLogout} /> : <Navigate to="/login" replace />}
+          />
+          <Route
             path="/tickets"
             element={isAuthenticated ? <TicketDashboard onLogout={handleLogout} /> : <Navigate to="/login" replace />}
           />
           <Route
+            path="/tickets/:ticketId"
+            element={isAuthenticated ? <TicketDetailView onLogout={handleLogout} /> : <Navigate to="/login" replace />}
+          />
+          <Route
             path="/reportes"
             element={isAuthenticated ? <ReportesView onLogout={handleLogout} /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/catalogos"
+            element={isAuthenticated ? <CatalogosAdminView onLogout={handleLogout} /> : <Navigate to="/login" replace />}
           />
           <Route
             path="/configuracion"

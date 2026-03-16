@@ -16,6 +16,7 @@ import com.empresa.incidentes.domain.port.in.ListTicketAuditUseCase;
 import com.empresa.incidentes.domain.port.in.ListTicketsQuery;
 import com.empresa.incidentes.domain.port.in.ListTicketsUseCase;
 import com.empresa.incidentes.domain.port.in.UpdateTicketStatusUseCase;
+import com.empresa.incidentes.domain.port.in.UpdateTicketCatalogUseCase;
 import com.empresa.incidentes.domain.port.out.UsuarioRepositoryPort;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.AddTicketNoteRequest;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.AssignTicketTechnicianRequest;
@@ -23,6 +24,7 @@ import com.empresa.incidentes.infrastructure.adapter.in.dto.TicketAuditResponse;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.CreateTicketRequest;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.TicketResponse;
 import com.empresa.incidentes.infrastructure.adapter.in.dto.UpdateTicketStatusRequest;
+import com.empresa.incidentes.infrastructure.adapter.in.dto.UpdateTicketCatalogRequest;
 import com.empresa.incidentes.infrastructure.mapper.TicketAuditApiMapper;
 import com.empresa.incidentes.infrastructure.mapper.TicketApiMapper;
 import jakarta.validation.Valid;
@@ -52,6 +54,7 @@ public class TicketController {
     private final GetTicketByIdUseCase getTicketByIdUseCase;
     private final ListTicketsUseCase listTicketsUseCase;
     private final UpdateTicketStatusUseCase updateTicketStatusUseCase;
+    private final UpdateTicketCatalogUseCase updateTicketCatalogUseCase;
     private final AssignTicketTechnicianUseCase assignTicketTechnicianUseCase;
     private final AddTicketNoteUseCase addTicketNoteUseCase;
     private final ListTicketAuditUseCase listTicketAuditUseCase;
@@ -64,6 +67,7 @@ public class TicketController {
             GetTicketByIdUseCase getTicketByIdUseCase,
             ListTicketsUseCase listTicketsUseCase,
             UpdateTicketStatusUseCase updateTicketStatusUseCase,
+            UpdateTicketCatalogUseCase updateTicketCatalogUseCase,
             AssignTicketTechnicianUseCase assignTicketTechnicianUseCase,
             AddTicketNoteUseCase addTicketNoteUseCase,
             ListTicketAuditUseCase listTicketAuditUseCase,
@@ -75,6 +79,7 @@ public class TicketController {
         this.getTicketByIdUseCase = getTicketByIdUseCase;
         this.listTicketsUseCase = listTicketsUseCase;
         this.updateTicketStatusUseCase = updateTicketStatusUseCase;
+        this.updateTicketCatalogUseCase = updateTicketCatalogUseCase;
         this.assignTicketTechnicianUseCase = assignTicketTechnicianUseCase;
         this.addTicketNoteUseCase = addTicketNoteUseCase;
         this.listTicketAuditUseCase = listTicketAuditUseCase;
@@ -136,6 +141,21 @@ public class TicketController {
         return updateTicketStatusUseCase.handle(mapper.toCommand(ticketId, request))
                 .map(mapper::toResponse);
     }
+
+        @PatchMapping("/{ticketId}/catalogo")
+        public Mono<TicketResponse> updateCatalog(
+            @PathVariable UUID ticketId,
+            @Valid @RequestBody UpdateTicketCatalogRequest request,
+            Authentication authentication
+        ) {
+        return updateTicketCatalogUseCase.handle(new com.empresa.incidentes.domain.port.in.UpdateTicketCatalogCommand(
+                ticketId,
+                request.catalogoIncidenteId(),
+                authentication.getName(),
+                actorRol(authentication).name()
+            ))
+            .map(mapper::toResponse);
+        }
 
         @PatchMapping("/{ticketId}/assignee")
         public Mono<TicketResponse> assignTechnician(

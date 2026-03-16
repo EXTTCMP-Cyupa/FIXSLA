@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import type { TicketAudit } from '../../../core/models/audit';
 import type { Ticket } from '../../../core/models/ticket';
 import type { User } from '../../../core/models/user';
@@ -18,9 +19,11 @@ interface MisTicketsViewProps {
 }
 
 export function MisTicketsView({ onLogout }: MisTicketsViewProps) {
+  const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { updateState, updatingId } = useTicketState();
   const session = authService.getSession();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
@@ -112,6 +115,23 @@ export function MisTicketsView({ onLogout }: MisTicketsViewProps) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tickets]);
+
+  useEffect(() => {
+    const targetTicketId = searchParams.get('ticketId');
+    if (!targetTicketId || tickets.length === 0) {
+      return;
+    }
+
+    const target = tickets.find((t) => t.id === targetTicketId);
+    if (!target) {
+      return;
+    }
+
+    setSelectedTicket(target);
+    const next = new URLSearchParams(searchParams);
+    next.delete('ticketId');
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams, tickets]);
 
   useEffect(() => {
     if (!selectedTicket) {
@@ -248,7 +268,7 @@ export function MisTicketsView({ onLogout }: MisTicketsViewProps) {
           assigningId={assigningId}
           selectedAssignees={selectedAssignees}
           updatingId={updatingId}
-          onOpenDetails={setSelectedTicket}
+          onOpenDetails={(ticket) => navigate(`/tickets/${ticket.id}`)}
           onTransition={handleTransition}
           onAssigneeSelection={handleAssigneeSelection}
           onAssign={handleAssign}

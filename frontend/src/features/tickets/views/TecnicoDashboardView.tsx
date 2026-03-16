@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { AlertTriangle, CircleDot, Clock3, Loader2, ShieldCheck } from 'lucide-react';
 import { authService } from '../../auth/authService';
 import { ticketService } from '../services/ticketService';
@@ -218,10 +219,12 @@ export function TecnicoDashboardView({ onLogout }: TecnicoDashboardViewProps) {
             <ul className="mt-2 space-y-2 text-[13px]">
               {urgentAssigned.map((ticket) => (
                 <li key={ticket.id} className="rounded-md bg-slate-50 p-2 dark:bg-slate-800">
-                  <div className="font-semibold">{ticket.codigo} - {ticket.titulo}</div>
-                  <div className="text-slate-600 dark:text-slate-400">
-                    {ticket.estado} | Vence: {new Date(ticket.resolucionLimite).toLocaleString()}
-                  </div>
+                  <Link to={`/mis-tickets?ticketId=${ticket.id}`} className="block rounded-md outline-none transition-colors hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-blue-500 dark:hover:bg-slate-700">
+                    <div className="font-semibold">{ticket.codigo} - {ticket.titulo}</div>
+                    <div className="text-slate-600 dark:text-slate-400">
+                      {ticket.estado} | Vence: {new Date(ticket.resolucionLimite).toLocaleString()}
+                    </div>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { LayoutDashboard, Ticket, BarChart3, Settings, ClipboardList } from 'lucide-react';
+import { LayoutDashboard, Ticket, BarChart3, Settings, ClipboardList, FolderKanban } from 'lucide-react';
 import type { UserRole } from '../../core/models/auth';
 import { ThemeToggle } from './ThemeToggle';
 import type { ThemeMode } from '../../core/hooks/useTheme';
@@ -28,10 +28,23 @@ function buildNavItems(role?: UserRole) {
     ];
   }
 
+  if (role === 'COLABORADOR') {
+    return [
+      { label: 'Dashboard', icon: LayoutDashboard, to: '/dashboard-colaborador' },
+      { label: 'Mis Tickets', icon: ClipboardList, to: '/mis-incidentes' },
+      { label: 'Tickets', icon: Ticket, to: '/tickets' },
+      { label: 'Reportes', icon: BarChart3, to: '/reportes' },
+      { label: 'Configuración', icon: Settings, to: '/configuracion' },
+    ];
+  }
+
   const items = [
     { label: 'Dashboard', icon: LayoutDashboard, to: '/tickets' },
     { label: 'Tickets', icon: Ticket, to: '/tickets' },
   ];
+  if (role === 'ADMIN') {
+    items.push({ label: 'Catálogos', icon: FolderKanban, to: '/catalogos' });
+  }
   items.push({ label: 'Reportes', icon: BarChart3, to: '/reportes' });
   items.push({ label: 'Configuración', icon: Settings, to: '/configuracion' });
   return items;

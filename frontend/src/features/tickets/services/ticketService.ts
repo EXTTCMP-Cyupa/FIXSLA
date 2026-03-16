@@ -25,6 +25,10 @@ export const ticketService = {
     const { data } = await apiClient.patch<Ticket>(`/tickets/${ticketId}/assignee`, { tecnicoAsignadoId });
     return data;
   },
+  async updateCatalog(ticketId: string, catalogoIncidenteId: string): Promise<Ticket> {
+    const { data } = await apiClient.patch<Ticket>(`/tickets/${ticketId}/catalogo`, { catalogoIncidenteId });
+    return data;
+  },
   async listAudit(ticketId: string): Promise<TicketAudit[]> {
     const { data } = await apiClient.get<TicketAudit[]>(`/tickets/${ticketId}/auditoria`);
     return data;
@@ -33,8 +37,10 @@ export const ticketService = {
     const { data } = await apiClient.post<TicketAudit>(`/tickets/${ticketId}/notas`, { nota });
     return data;
   },
-  async listCatalogos(): Promise<CatalogoIncidente[]> {
-    const { data } = await apiClient.get<CatalogoIncidente[]>('/catalogos', { params: { soloActivos: true } });
+  async listCatalogos(filters?: Partial<{ soloActivos: boolean }>): Promise<CatalogoIncidente[]> {
+    const { data } = await apiClient.get<CatalogoIncidente[]>('/catalogos', {
+      params: { soloActivos: true, ...filters },
+    });
     return data;
   },
   async createCatalogo(payload: CreateCatalogoPayload): Promise<CatalogoIncidente> {

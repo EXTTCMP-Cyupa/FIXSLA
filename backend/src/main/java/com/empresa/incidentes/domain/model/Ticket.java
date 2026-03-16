@@ -140,6 +140,26 @@ public final class Ticket {
         return assignTechnician(tecnicoId, now);
     }
 
+    public Ticket updateCatalog(UUID newCatalogoIncidenteId, TicketPriority newPrioridad, Instant now) {
+        return new Ticket(
+                id,
+                codigo,
+                titulo,
+                descripcion,
+                solicitanteId,
+                tecnicoAsignadoId,
+                Objects.requireNonNull(newCatalogoIncidenteId, "El catálogo es obligatorio"),
+                estado,
+                Objects.requireNonNull(newPrioridad, "La prioridad es obligatoria"),
+                creadoEn,
+                Objects.requireNonNull(now, "La fecha actual es obligatoria"),
+                primeraRespuestaLimite,
+                resolucionLimite,
+                pendienteDesde,
+                slaPausadoAcumulado
+        );
+    }
+
     public Ticket startProgress(Instant now) {
         validateTransition(TicketStatus.EN_PROCESO);
         return copy(
