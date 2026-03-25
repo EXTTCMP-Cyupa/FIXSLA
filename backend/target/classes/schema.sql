@@ -8,12 +8,22 @@ CREATE TABLE IF NOT EXISTS catalogos_incidente (
     actualizado_en TIMESTAMP NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS ubicaciones (
+    id UUID PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    descripcion VARCHAR(500),
+    activo BOOLEAN NOT NULL,
+    creado_en TIMESTAMP NOT NULL,
+    actualizado_en TIMESTAMP NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS usuarios (
     id UUID PRIMARY KEY,
     username VARCHAR(80) NOT NULL UNIQUE,
     nombre VARCHAR(150) NOT NULL,
     rol VARCHAR(20) NOT NULL,
     area VARCHAR(120) NOT NULL,
+    numero_contacto VARCHAR(50),
     activo BOOLEAN NOT NULL,
     creado_en TIMESTAMP NOT NULL,
     actualizado_en TIMESTAMP NOT NULL
@@ -27,6 +37,8 @@ CREATE TABLE IF NOT EXISTS tickets (
     solicitante_id UUID NOT NULL,
     tecnico_asignado_id UUID,
     catalogo_incidente_id UUID NOT NULL,
+    ubicacion_id UUID,
+    numero_contacto VARCHAR(50),
     estado VARCHAR(20) NOT NULL,
     prioridad VARCHAR(20) NOT NULL,
     creado_en TIMESTAMP NOT NULL,
@@ -36,7 +48,8 @@ CREATE TABLE IF NOT EXISTS tickets (
     pendiente_desde TIMESTAMP,
     sla_pausado_segundos BIGINT NOT NULL,
     CONSTRAINT fk_ticket_catalogo FOREIGN KEY (catalogo_incidente_id) REFERENCES catalogos_incidente(id),
-    CONSTRAINT fk_ticket_tecnico FOREIGN KEY (tecnico_asignado_id) REFERENCES usuarios(id)
+    CONSTRAINT fk_ticket_tecnico FOREIGN KEY (tecnico_asignado_id) REFERENCES usuarios(id),
+    CONSTRAINT fk_ticket_ubicacion FOREIGN KEY (ubicacion_id) REFERENCES ubicaciones(id)
 );
 
 CREATE TABLE IF NOT EXISTS ticket_audit (
@@ -57,3 +70,10 @@ CREATE TABLE IF NOT EXISTS ticket_audit (
         CONSTRAINT fk_uc_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
         CONSTRAINT fk_uc_catalogo FOREIGN KEY (catalogo_id) REFERENCES catalogos_incidente(id)
     );
+
+ALTER TABLE usuarios
+    ADD COLUMN IF NOT EXISTS numero_contacto VARCHAR(50);
+
+ALTER TABLE tickets
+    ADD COLUMN IF NOT EXISTS ubicacion_id UUID,
+    ADD COLUMN IF NOT EXISTS numero_contacto VARCHAR(50);

@@ -2,19 +2,23 @@ import { FormEvent, useEffect, useState } from 'react';
 import type { CatalogoIncidente } from '../../../core/models/catalogo';
 import type { CreateTicketPayload } from '../../../core/models/ticket';
 import { Button } from '../../../shared/Button';
+import type { Ubicacion } from '../../../core/models/ubicacion';
 
 interface CreateTicketFormProps {
   catalogos: CatalogoIncidente[];
+  ubicaciones?: Ubicacion[];
   loading?: boolean;
   onSubmit: (payload: CreateTicketPayload) => Promise<void>;
 }
 
-export function CreateTicketForm({ catalogos, loading, onSubmit }: CreateTicketFormProps) {
+export function CreateTicketForm({ catalogos, ubicaciones = [], loading, onSubmit }: CreateTicketFormProps) {
   const [form, setForm] = useState<CreateTicketPayload>({
     titulo: '',
     descripcion: '',
     solicitanteId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
     catalogoIncidenteId: '',
+    ubicacionId: '',
+    numeroContacto: '',
   });
 
   const selectedCatalog = catalogos.find((catalogo) => catalogo.id === form.catalogoIncidenteId);
@@ -27,8 +31,13 @@ export function CreateTicketForm({ catalogos, loading, onSubmit }: CreateTicketF
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await onSubmit(form);
-    setForm((current) => ({ ...current, titulo: '', descripcion: '' }));
+    const payload: CreateTicketPayload = {
+      ...form,
+      ubicacionId: form.ubicacionId || undefined,
+      numeroContacto: form.numeroContacto?.trim() || undefined,
+    };
+    await onSubmit(payload);
+    setForm((current) => ({ ...current, titulo: '', descripcion: '', ubicacionId: '', numeroContacto: '' }));
   };
 
   const priorityClasses = (priority: CatalogoIncidente['prioridadPorDefecto']) => {
@@ -104,6 +113,36 @@ export function CreateTicketForm({ catalogos, loading, onSubmit }: CreateTicketF
           value={form.descripcion}
           onChange={(event) => setForm({ ...form, descripcion: event.target.value })}
           required
+          disabled={!form.catalogoIncidenteId}
+        />
+      </label>
+
+      {ubicaciones.length > 0 && (
+        <label className="field text-slate-900 dark:text-slate-50">
+          <span className="text-[14px] font-semibold">4. Ubicación (opcional)</span>
+          Ubicación
+          <select
+            value={form.ubicacionId ?? ''}
+            onChange={(event) => setForm({ ...form, ubicacionId: event.target.value })}
+            disabled={!form.catalogoIncidenteId}
+          >
+            <option value="">— Sin especificar —</option>
+            {ubicaciones.filter((u) => u.activo).map((u) => (
+              <option key={u.id} value={u.id}>{u.nombre}</option>
+            ))}
+          </select>
+        </label>
+      )}
+
+      <label className="field text-slate-900 dark:text-slate-50">
+        <span className="text-[14px] font-semibold">{ubicaciones.length > 0 ? '5.' : '4.'} Número de contacto (opcional)</span>
+        Número de contacto
+        <input
+          type="tel"
+          className="text-slate-900 dark:text-slate-50"
+          value={form.numeroContacto ?? ''}
+          placeholder="Ej: +504 9999-9999"
+          onChange={(event) => setForm({ ...form, numeroContacto: event.target.value })}
           disabled={!form.catalogoIncidenteId}
         />
       </label>

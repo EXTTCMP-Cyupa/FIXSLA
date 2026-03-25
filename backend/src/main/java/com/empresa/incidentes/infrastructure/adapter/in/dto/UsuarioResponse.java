@@ -12,6 +12,7 @@ public record UsuarioResponse(
         String nombre,
         UsuarioRol rol,
         String area,
+        String numeroContacto,
         List<UUID> catalogoIds,
         boolean activo,
         Instant creadoEn,

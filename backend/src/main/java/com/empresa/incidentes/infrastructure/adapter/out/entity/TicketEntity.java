@@ -21,6 +21,8 @@ public class TicketEntity implements Persistable<UUID> {
     private UUID solicitanteId;
     private UUID tecnicoAsignadoId;
     private UUID catalogoIncidenteId;
+    private UUID ubicacionId;
+    private String numeroContacto;
     private TicketStatus estado;
     private TicketPriority prioridad;
     private Instant creadoEn;
@@ -44,6 +46,8 @@ public class TicketEntity implements Persistable<UUID> {
             UUID solicitanteId,
             UUID tecnicoAsignadoId,
             UUID catalogoIncidenteId,
+            UUID ubicacionId,
+            String numeroContacto,
             TicketStatus estado,
             TicketPriority prioridad,
             Instant creadoEn,
@@ -61,6 +65,8 @@ public class TicketEntity implements Persistable<UUID> {
         this.solicitanteId = solicitanteId;
         this.tecnicoAsignadoId = tecnicoAsignadoId;
         this.catalogoIncidenteId = catalogoIncidenteId;
+        this.ubicacionId = ubicacionId;
+        this.numeroContacto = numeroContacto;
         this.estado = estado;
         this.prioridad = prioridad;
         this.creadoEn = creadoEn;
@@ -136,6 +142,22 @@ public class TicketEntity implements Persistable<UUID> {
 
     public void setCatalogoIncidenteId(UUID catalogoIncidenteId) {
         this.catalogoIncidenteId = catalogoIncidenteId;
+    }
+
+    public UUID getUbicacionId() {
+        return ubicacionId;
+    }
+
+    public void setUbicacionId(UUID ubicacionId) {
+        this.ubicacionId = ubicacionId;
+    }
+
+    public String getNumeroContacto() {
+        return numeroContacto;
+    }
+
+    public void setNumeroContacto(String numeroContacto) {
+        this.numeroContacto = numeroContacto;
     }
 
     public TicketStatus getEstado() {

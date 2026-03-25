@@ -33,6 +33,7 @@ public class UpdateUsuarioService implements UpdateUsuarioUseCase {
                         command.nombre(),
                         command.rol(),
                         command.area(),
+                        command.numeroContacto(),
                         command.rol() == UsuarioRol.TECNICO
                                 ? (command.catalogoIds() != null ? command.catalogoIds() : List.of())
                                 : List.of(),

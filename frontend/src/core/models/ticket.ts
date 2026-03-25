@@ -9,6 +9,8 @@ export interface Ticket {
   solicitanteId: string;
   tecnicoAsignadoId?: string | null;
   catalogoIncidenteId: string;
+  ubicacionId?: string | null;
+  numeroContacto?: string | null;
   estado: TicketStatus;
   prioridad: TicketPriority;
   creadoEn: string;
@@ -25,6 +27,8 @@ export interface CreateTicketPayload {
   descripcion: string;
   solicitanteId: string;
   catalogoIncidenteId: string;
+  ubicacionId?: string;
+  numeroContacto?: string;
 }
 
 export interface UpdateTicketStatusPayload {

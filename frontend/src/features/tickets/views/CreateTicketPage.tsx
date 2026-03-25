@@ -5,10 +5,13 @@ import type { CreateTicketPayload } from '../../../core/models/ticket';
 import { Button } from '../../../shared/Button';
 import { CreateTicketForm } from '../components/CreateTicketForm';
 import { ticketService } from '../services/ticketService';
+import { ubicacionService } from '../../ubicaciones/services/ubicacionService';
+import type { Ubicacion } from '../../../core/models/ubicacion';
 
 export function CreateTicketPage() {
   const navigate = useNavigate();
   const [catalogos, setCatalogos] = useState<CatalogoIncidente[]>([]);
+  const [ubicaciones, setUbicaciones] = useState<Ubicacion[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -16,6 +19,9 @@ export function CreateTicketPage() {
     ticketService.listCatalogos()
       .then(setCatalogos)
       .catch(() => setError('No fue posible cargar el catálogo de incidentes.'));
+    ubicacionService.list()
+      .then(setUbicaciones)
+      .catch(() => {});
   }, []);
 
   const handleSubmit = async (payload: CreateTicketPayload) => {
@@ -43,7 +49,7 @@ export function CreateTicketPage() {
         </Link>
       </div>
       {error ? <span className="text-sm text-red-700 dark:text-red-400">{error}</span> : null}
-      <CreateTicketForm catalogos={catalogos} loading={loading} onSubmit={handleSubmit} />
+      <CreateTicketForm catalogos={catalogos} ubicaciones={ubicaciones} loading={loading} onSubmit={handleSubmit} />
     </div>
   );
 }

@@ -24,6 +24,8 @@ public interface TicketPersistenceMapper {
                 entity.getSolicitanteId(),
                 entity.getTecnicoAsignadoId(),
                 entity.getCatalogoIncidenteId(),
+                entity.getUbicacionId(),
+                entity.getNumeroContacto(),
                 entity.getEstado(),
                 entity.getPrioridad(),
                 entity.getCreadoEn(),

@@ -11,6 +11,7 @@ public record CreateUsuarioRequest(
         @NotBlank String nombre,
         @NotNull UsuarioRol rol,
         @NotBlank String area,
+        String numeroContacto,
         List<UUID> catalogoIds
 ) {
 }

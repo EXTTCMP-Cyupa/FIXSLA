@@ -10,6 +10,8 @@ public record CreateTicketRequest(
         @NotBlank String titulo,
         @NotBlank String descripcion,
         @NotNull UUID solicitanteId,
-        @NotNull UUID catalogoIncidenteId
+        @NotNull UUID catalogoIncidenteId,
+        UUID ubicacionId,
+        String numeroContacto
 ) {
 }

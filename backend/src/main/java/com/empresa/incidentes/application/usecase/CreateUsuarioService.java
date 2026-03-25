@@ -27,6 +27,7 @@ public class CreateUsuarioService implements CreateUsuarioUseCase {
                         command.nombre(),
                         command.rol(),
                         command.area(),
+                        command.numeroContacto(),
                 command.catalogoIds() != null ? command.catalogoIds() : List.of(),
                         clockPort.now()
                 ))

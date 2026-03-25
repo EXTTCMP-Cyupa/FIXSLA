@@ -98,7 +98,9 @@ public class TicketController {
             baseCommand.titulo(),
             baseCommand.descripcion(),
             userId(authentication),
-            baseCommand.catalogoIncidenteId()
+            baseCommand.catalogoIncidenteId(),
+            baseCommand.ubicacionId(),
+            baseCommand.numeroContacto()
         )
             : baseCommand;
 

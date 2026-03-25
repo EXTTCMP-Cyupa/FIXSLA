@@ -16,6 +16,8 @@ public final class Ticket {
     private final UUID solicitanteId;
     private final UUID tecnicoAsignadoId;
     private final UUID catalogoIncidenteId;
+    private final UUID ubicacionId;
+    private final String numeroContacto;
     private final TicketStatus estado;
     private final TicketPriority prioridad;
     private final Instant creadoEn;
@@ -33,6 +35,8 @@ public final class Ticket {
             UUID solicitanteId,
             UUID tecnicoAsignadoId,
             UUID catalogoIncidenteId,
+            UUID ubicacionId,
+            String numeroContacto,
             TicketStatus estado,
             TicketPriority prioridad,
             Instant creadoEn,
@@ -49,6 +53,8 @@ public final class Ticket {
         this.solicitanteId = Objects.requireNonNull(solicitanteId, "El solicitante es obligatorio");
         this.tecnicoAsignadoId = tecnicoAsignadoId;
         this.catalogoIncidenteId = Objects.requireNonNull(catalogoIncidenteId, "El catálogo es obligatorio");
+        this.ubicacionId = ubicacionId;
+        this.numeroContacto = numeroContacto != null ? numeroContacto.trim() : null;
         this.estado = Objects.requireNonNull(estado, "El estado del ticket es obligatorio");
         this.prioridad = Objects.requireNonNull(prioridad, "La prioridad del ticket es obligatoria");
         this.creadoEn = Objects.requireNonNull(creadoEn, "La fecha de creación es obligatoria");
@@ -65,6 +71,8 @@ public final class Ticket {
             String descripcion,
             UUID solicitanteId,
             UUID catalogoIncidenteId,
+            UUID ubicacionId,
+            String numeroContacto,
             TicketPriority prioridad,
             Instant now,
             Instant primeraRespuestaLimite,
@@ -79,6 +87,8 @@ public final class Ticket {
                 solicitanteId,
                 null,
                 catalogoIncidenteId,
+                ubicacionId,
+                numeroContacto,
                 TicketStatus.NUEVO,
                 prioridad,
                 timestamp,
@@ -98,6 +108,8 @@ public final class Ticket {
                 UUID solicitanteId,
                 UUID tecnicoAsignadoId,
                 UUID catalogoIncidenteId,
+                UUID ubicacionId,
+                String numeroContacto,
                 TicketStatus estado,
                 TicketPriority prioridad,
                 Instant creadoEn,
@@ -115,6 +127,8 @@ public final class Ticket {
                 solicitanteId,
                 tecnicoAsignadoId,
                 catalogoIncidenteId,
+                ubicacionId,
+                numeroContacto,
                 estado,
                 prioridad,
                 creadoEn,
@@ -149,6 +163,8 @@ public final class Ticket {
                 solicitanteId,
                 tecnicoAsignadoId,
                 Objects.requireNonNull(newCatalogoIncidenteId, "El catálogo es obligatorio"),
+                ubicacionId,
+                numeroContacto,
                 estado,
                 Objects.requireNonNull(newPrioridad, "La prioridad es obligatoria"),
                 creadoEn,
@@ -253,6 +269,14 @@ public final class Ticket {
         return catalogoIncidenteId;
     }
 
+    public UUID getUbicacionId() {
+        return ubicacionId;
+    }
+
+    public String getNumeroContacto() {
+        return numeroContacto;
+    }
+
     public TicketStatus getEstado() {
         return estado;
     }
@@ -310,6 +334,8 @@ public final class Ticket {
                 solicitanteId,
                 newTecnicoAsignadoId,
                 catalogoIncidenteId,
+                ubicacionId,
+                numeroContacto,
                 newEstado,
                 prioridad,
                 creadoEn,

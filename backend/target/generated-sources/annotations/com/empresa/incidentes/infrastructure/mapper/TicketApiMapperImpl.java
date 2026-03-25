@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-15T21:50:40-0500",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Oracle Corporation)"
+    date = "2026-03-19T16:15:57-0500",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260224-0835, environment: Java 21.0.10 (Eclipse Adoptium)"
 )
 @Component
 public class TicketApiMapperImpl implements TicketApiMapper {
@@ -32,14 +32,18 @@ public class TicketApiMapperImpl implements TicketApiMapper {
         String descripcion = null;
         UUID solicitanteId = null;
         UUID catalogoIncidenteId = null;
+        UUID ubicacionId = null;
+        String numeroContacto = null;
 
         codigo = request.codigo();
         titulo = request.titulo();
         descripcion = request.descripcion();
         solicitanteId = request.solicitanteId();
         catalogoIncidenteId = request.catalogoIncidenteId();
+        ubicacionId = request.ubicacionId();
+        numeroContacto = request.numeroContacto();
 
-        CreateTicketCommand createTicketCommand = new CreateTicketCommand( codigo, titulo, descripcion, solicitanteId, catalogoIncidenteId );
+        CreateTicketCommand createTicketCommand = new CreateTicketCommand( codigo, titulo, descripcion, solicitanteId, catalogoIncidenteId, ubicacionId, numeroContacto );
 
         return createTicketCommand;
     }
@@ -77,6 +81,8 @@ public class TicketApiMapperImpl implements TicketApiMapper {
         UUID solicitanteId = null;
         UUID tecnicoAsignadoId = null;
         UUID catalogoIncidenteId = null;
+        UUID ubicacionId = null;
+        String numeroContacto = null;
         TicketStatus estado = null;
         TicketPriority prioridad = null;
         Instant creadoEn = null;
@@ -92,6 +98,8 @@ public class TicketApiMapperImpl implements TicketApiMapper {
         solicitanteId = ticket.getSolicitanteId();
         tecnicoAsignadoId = ticket.getTecnicoAsignadoId();
         catalogoIncidenteId = ticket.getCatalogoIncidenteId();
+        ubicacionId = ticket.getUbicacionId();
+        numeroContacto = ticket.getNumeroContacto();
         estado = ticket.getEstado();
         prioridad = ticket.getPrioridad();
         creadoEn = ticket.getCreadoEn();
@@ -102,7 +110,7 @@ public class TicketApiMapperImpl implements TicketApiMapper {
 
         Long slaPausadoSegundos = ticket.getSlaPausadoAcumulado().getSeconds();
 
-        TicketResponse ticketResponse = new TicketResponse( id, codigo, titulo, descripcion, solicitanteId, tecnicoAsignadoId, catalogoIncidenteId, estado, prioridad, creadoEn, actualizadoEn, primeraRespuestaLimite, resolucionLimite, pendienteDesde, slaPausadoSegundos );
+        TicketResponse ticketResponse = new TicketResponse( id, codigo, titulo, descripcion, solicitanteId, tecnicoAsignadoId, catalogoIncidenteId, ubicacionId, numeroContacto, estado, prioridad, creadoEn, actualizadoEn, primeraRespuestaLimite, resolucionLimite, pendienteDesde, slaPausadoSegundos );
 
         return ticketResponse;
     }

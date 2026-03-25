@@ -14,6 +14,8 @@ public record TicketResponse(
         UUID solicitanteId,
         UUID tecnicoAsignadoId,
         UUID catalogoIncidenteId,
+        UUID ubicacionId,
+        String numeroContacto,
         TicketStatus estado,
         TicketPriority prioridad,
         Instant creadoEn,

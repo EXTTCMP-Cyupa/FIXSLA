@@ -9,6 +9,7 @@ public record CreateUsuarioCommand(
         String nombre,
         UsuarioRol rol,
         String area,
+        String numeroContacto,
         List<UUID> catalogoIds
 ) {
 }

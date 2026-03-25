@@ -7,6 +7,8 @@ public record CreateTicketCommand(
         String titulo,
         String descripcion,
         UUID solicitanteId,
-        UUID catalogoIncidenteId
+        UUID catalogoIncidenteId,
+        UUID ubicacionId,
+        String numeroContacto
 ) {
 }

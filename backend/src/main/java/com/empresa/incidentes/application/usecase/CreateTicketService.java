@@ -84,6 +84,8 @@ public class CreateTicketService implements CreateTicketUseCase {
                 command.descripcion(),
                 command.solicitanteId(),
                 catalogo.id(),
+                command.ubicacionId(),
+                command.numeroContacto(),
                 catalogo.prioridadPorDefecto(),
                 now,
                 primeraRespuestaLimite,

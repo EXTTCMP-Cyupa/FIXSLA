@@ -10,6 +10,7 @@ public record UpdateUsuarioCommand(
         String nombre,
         UsuarioRol rol,
         String area,
+        String numeroContacto,
         Boolean activo,
         List<UUID> catalogoIds
 ) {

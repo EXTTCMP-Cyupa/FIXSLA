@@ -21,6 +21,7 @@ public interface UsuarioPersistenceMapper {
                 entity.getNombre(),
                 entity.getRol(),
                 entity.getArea(),
+                entity.getNumeroContacto(),
                 catalogoIds,
                 Boolean.TRUE.equals(entity.getActivo()),
                 entity.getCreadoEn(),

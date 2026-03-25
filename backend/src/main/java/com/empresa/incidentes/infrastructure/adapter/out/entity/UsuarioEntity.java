@@ -18,6 +18,7 @@ public class UsuarioEntity implements Persistable<UUID> {
     private String nombre;
     private UsuarioRol rol;
     private String area;
+    private String numeroContacto;
     private Boolean activo;
     private Instant creadoEn;
     private Instant actualizadoEn;
@@ -76,6 +77,14 @@ public class UsuarioEntity implements Persistable<UUID> {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getNumeroContacto() {
+        return numeroContacto;
+    }
+
+    public void setNumeroContacto(String numeroContacto) {
+        this.numeroContacto = numeroContacto;
     }
 
     public Boolean getActivo() {

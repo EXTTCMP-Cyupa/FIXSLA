@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-15T21:50:40-0500",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Oracle Corporation)"
+    date = "2026-03-19T16:15:57-0500",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260224-0835, environment: Java 21.0.10 (Eclipse Adoptium)"
 )
 @Component
 public class UsuarioApiMapperImpl implements UsuarioApiMapper {
@@ -32,18 +32,20 @@ public class UsuarioApiMapperImpl implements UsuarioApiMapper {
         String nombre = null;
         UsuarioRol rol = null;
         String area = null;
+        String numeroContacto = null;
         List<UUID> catalogoIds = null;
 
         username = request.username();
         nombre = request.nombre();
         rol = request.rol();
         area = request.area();
+        numeroContacto = request.numeroContacto();
         List<UUID> list = request.catalogoIds();
         if ( list != null ) {
             catalogoIds = new ArrayList<UUID>( list );
         }
 
-        CreateUsuarioCommand createUsuarioCommand = new CreateUsuarioCommand( username, nombre, rol, area, catalogoIds );
+        CreateUsuarioCommand createUsuarioCommand = new CreateUsuarioCommand( username, nombre, rol, area, numeroContacto, catalogoIds );
 
         return createUsuarioCommand;
     }
@@ -57,12 +59,14 @@ public class UsuarioApiMapperImpl implements UsuarioApiMapper {
         String nombre = null;
         UsuarioRol rol = null;
         String area = null;
+        String numeroContacto = null;
         Boolean activo = null;
         List<UUID> catalogoIds = null;
         if ( request != null ) {
             nombre = request.nombre();
             rol = request.rol();
             area = request.area();
+            numeroContacto = request.numeroContacto();
             activo = request.activo();
             List<UUID> list = request.catalogoIds();
             if ( list != null ) {
@@ -72,7 +76,7 @@ public class UsuarioApiMapperImpl implements UsuarioApiMapper {
         UUID id1 = null;
         id1 = id;
 
-        UpdateUsuarioCommand updateUsuarioCommand = new UpdateUsuarioCommand( id1, nombre, rol, area, activo, catalogoIds );
+        UpdateUsuarioCommand updateUsuarioCommand = new UpdateUsuarioCommand( id1, nombre, rol, area, numeroContacto, activo, catalogoIds );
 
         return updateUsuarioCommand;
     }
@@ -88,6 +92,7 @@ public class UsuarioApiMapperImpl implements UsuarioApiMapper {
         String nombre = null;
         UsuarioRol rol = null;
         String area = null;
+        String numeroContacto = null;
         List<UUID> catalogoIds = null;
         boolean activo = false;
         Instant creadoEn = null;
@@ -98,6 +103,7 @@ public class UsuarioApiMapperImpl implements UsuarioApiMapper {
         nombre = usuario.nombre();
         rol = usuario.rol();
         area = usuario.area();
+        numeroContacto = usuario.numeroContacto();
         List<UUID> list = usuario.catalogoIds();
         if ( list != null ) {
             catalogoIds = new ArrayList<UUID>( list );
@@ -106,7 +112,7 @@ public class UsuarioApiMapperImpl implements UsuarioApiMapper {
         creadoEn = usuario.creadoEn();
         actualizadoEn = usuario.actualizadoEn();
 
-        UsuarioResponse usuarioResponse = new UsuarioResponse( id, username, nombre, rol, area, catalogoIds, activo, creadoEn, actualizadoEn );
+        UsuarioResponse usuarioResponse = new UsuarioResponse( id, username, nombre, rol, area, numeroContacto, catalogoIds, activo, creadoEn, actualizadoEn );
 
         return usuarioResponse;
     }

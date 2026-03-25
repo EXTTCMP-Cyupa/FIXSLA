@@ -11,6 +11,7 @@ public record UpdateUsuarioRequest(
         @NotBlank String nombre,
         @NotNull UsuarioRol rol,
         @NotBlank String area,
+        String numeroContacto,
         @NotNull Boolean activo,
         List<UUID> catalogoIds
 ) {

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-15T21:50:40-0500",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Oracle Corporation)"
+    date = "2026-03-19T16:15:57-0500",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260224-0835, environment: Java 21.0.10 (Eclipse Adoptium)"
 )
 @Component
 public class TicketPersistenceMapperImpl implements TicketPersistenceMapper {
@@ -28,6 +28,8 @@ public class TicketPersistenceMapperImpl implements TicketPersistenceMapper {
         ticketEntity.setSolicitanteId( ticket.getSolicitanteId() );
         ticketEntity.setTecnicoAsignadoId( ticket.getTecnicoAsignadoId() );
         ticketEntity.setCatalogoIncidenteId( ticket.getCatalogoIncidenteId() );
+        ticketEntity.setUbicacionId( ticket.getUbicacionId() );
+        ticketEntity.setNumeroContacto( ticket.getNumeroContacto() );
         ticketEntity.setEstado( ticket.getEstado() );
         ticketEntity.setPrioridad( ticket.getPrioridad() );
         ticketEntity.setCreadoEn( ticket.getCreadoEn() );
